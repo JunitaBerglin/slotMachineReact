@@ -1,20 +1,31 @@
 import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 
-const PixiSlotMachine: React.FC = () => {
+interface PixiSlotMachineProps {
+  isSpinning: boolean;
+}
+
+const PixiSlotMachine: React.FC<PixiSlotMachineProps> = ({
+  isSpinning,
+}) => {
   const pixiContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const app = new PIXI.Application({
+    const app = new PIXI.Application();
+
+    app.init({
       width: 800,
       height: 500,
       backgroundColor: 0x1099bb,
       antialias: true,
-      transparent: false,
+      backgroundAlpha: 0,
       resolution: 1,
+      autoStart: true,
+      resizeTo: window,
+      sharedTicker: true,
     });
 
-    pixiContainerRef.current?.appendChild(app.view);
+    pixiContainerRef.current?.appendChild(app.canvas);
 
     const loadAssets = async () => {
       await PIXI.Assets.load("public/assets/assets.json");
@@ -46,7 +57,7 @@ const PixiSlotMachine: React.FC = () => {
       createSymbols() {
         this.symbols = [];
         for (let i = 0; i < 3; i++) {
-          let sprite = new PIXI.Sprite(
+          const sprite = new PIXI.Sprite(
             this.textures[
               Math.floor(Math.random() * this.textures.length)
             ]
@@ -59,7 +70,7 @@ const PixiSlotMachine: React.FC = () => {
 
       spin() {
         this.spinning = true;
-        this.velocity = 50; // Speed of spinning
+        this.velocity = 50;
       }
 
       update(delta: number) {
@@ -67,7 +78,6 @@ const PixiSlotMachine: React.FC = () => {
           this.symbols.forEach((sprite) => {
             sprite.y += this.velocity * delta;
             if (sprite.y > 450) {
-              // Reset position when the symbol goes off screen
               sprite.y -= 450;
               sprite.texture =
                 this.textures[
@@ -80,7 +90,6 @@ const PixiSlotMachine: React.FC = () => {
 
       stop() {
         this.spinning = false;
-        // Additional logic to ensure symbols align properly
         this.symbols.forEach((sprite) => {
           const pos = sprite.y % 150;
           sprite.y -= pos;
@@ -91,23 +100,13 @@ const PixiSlotMachine: React.FC = () => {
     const run = async () => {
       const reels: Reel[] = [];
       for (let i = 0; i < 3; i++) {
-        let reel = new Reel(i * 250 + 75, 100);
+        const reel = new Reel(i * 250 + 75, 100);
         reels.push(reel);
       }
 
-      document
-        .getElementById("spinButton")
-        ?.addEventListener("click", () => {
-          reels.forEach((reel) => reel.spin());
-          setTimeout(() => {
-            reels.forEach((reel) => reel.stop());
-            checkWin(reels);
-          }, 2000);
-        });
-
-      app.ticker.add((delta) => {
-        reels.forEach((reel) => reel.update(delta));
-      });
+      //   app.ticker.add((delta) => {
+      //     reels.forEach((reel) => reel.update(delta));
+      //   });
     };
 
     const checkWin = (reels: Reel[]) => {
@@ -120,7 +119,6 @@ const PixiSlotMachine: React.FC = () => {
     };
 
     const playWinAnimation = () => {
-      // Use WinsweepBox[00-25] sequence for win animation
       console.log("You win!");
     };
 
@@ -133,6 +131,12 @@ const PixiSlotMachine: React.FC = () => {
       app.destroy(true, true);
     };
   }, []);
+
+  useEffect(() => {
+    if (isSpinning) {
+      // Logic to start spinning
+    }
+  }, [isSpinning]);
 
   return <div ref={pixiContainerRef} />;
 };
