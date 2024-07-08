@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import PixiSlotMachine from "./components/slot-machine/PixiSlotMachine";
-import SpinButton from "./components/buttons/SpinButton";
+import Machine from "./slot-machine/Machine";
+import SpinButton from "./buttons/SpinButton";
+import "../styles/index.css";
 
 const App: React.FC = () => {
   const [isSpinning, setIsSpinning] = useState(false);
@@ -15,7 +16,9 @@ const App: React.FC = () => {
       <header className="App-header">
         <h1>Slot Machine</h1>
         <SpinButton onClick={handleSpinClick} />
-        <PixiSlotMachine isSpinning={isSpinning} />
+        <div className="pixi-container">
+          <Machine isSpinning={isSpinning} />
+        </div>
       </header>
     </div>
   );

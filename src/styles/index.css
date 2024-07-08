@@ -1,0 +1,33 @@
+.App {
+    text-align: center;
+    background-color: #FCEDDA;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+  
+  .App-header {
+    margin: 50px;
+  }
+  
+  #spinButton {
+    font-size: 20px;
+    padding: 10px 20px;
+    background-color: #096544;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #spinButton:hover {
+    background-color: #0f8258;
+  }
+  
+  .pixi-container {
+    overflow: hidden;
+  }
+  
