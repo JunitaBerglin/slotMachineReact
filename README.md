@@ -19,7 +19,6 @@ Make a 3 reel slot that starts, spins and stops.
 
     If you have any questions, feel free to contact us at devlead@jaderabbitstudio.com
 
-
 ### Built With
 
 React
@@ -30,8 +29,7 @@ Pixi
 
 1. Clone this repo, in your terminal run the following command : git clone "https://github.com/JunitaBerglin/slotMachineReact.git"
 2. Install all npm packages needed, in your terminal run the following command : npm i
-3. Start server, in your terminal run the following command : npm start
-
+3. Start server, in your terminal run the following command : npm run start
 
 ## This is how the assignment looked when downloaded
 
@@ -67,5 +65,3 @@ async function run() {
         sprite.rotation += 0.01 * delta;
     });
 }
-
-

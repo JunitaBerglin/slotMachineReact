@@ -1,20 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Container, Sprite, useTick } from "@pixi/react";
-import { Texture } from "pixi.js";
+import { Container, useTick, Sprite } from "@pixi/react";
 
 interface ReelProps {
   x: number;
   y: number;
-  textures: Texture[];
   isSpinning: boolean;
+  images: any[];
 }
 
-const Reel: React.FC<ReelProps> = ({
-  x,
-  y,
-  textures,
-  isSpinning,
-}) => {
+const Reel: React.FC<ReelProps> = ({ x, y, isSpinning, images }) => {
   const [symbols, setSymbols] = useState<number[]>([0, 1, 2]);
   const containerRef = useRef<any>(null);
   const velocityRef = useRef(0);
@@ -26,18 +20,18 @@ const Reel: React.FC<ReelProps> = ({
       velocityRef.current = 0;
       setSymbols((prevSymbols) =>
         prevSymbols.map(() =>
-          Math.floor(Math.random() * textures.length)
+          Math.floor(Math.random() * images.length)
         )
       );
     }
-  }, [isSpinning, textures.length]);
+  }, [isSpinning, images.length]);
 
   useTick((delta: number) => {
     if (velocityRef.current > 0) {
       setSymbols((prevSymbols) =>
         prevSymbols.map(
           (symbol) =>
-            (symbol + velocityRef.current * delta) % textures.length
+            (symbol + velocityRef.current * delta) % images.length
         )
       );
     }
@@ -45,11 +39,12 @@ const Reel: React.FC<ReelProps> = ({
 
   return (
     <Container x={x} y={y} ref={containerRef}>
-      {symbols.map((symbol, index) => (
+      {symbols.map((symbolIndex, index) => (
         <Sprite
           key={index}
-          texture={textures[symbol]}
-          y={index * 150}
+          texture={images[symbolIndex]}
+          x={0}
+          y={index * 100}
         />
       ))}
     </Container>

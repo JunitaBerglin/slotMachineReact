@@ -1,55 +1,62 @@
 import React, { useEffect, useState } from "react";
-import { Stage } from "@pixi/react";
-import { Texture, Assets } from "pixi.js";
+import { Stage, AnimatedSprite } from "@pixi/react";
 import Reel from "./Reel";
+import { Assets } from "pixi.js";
 
 interface MachineProps {
   isSpinning: boolean;
+  images: string[];
 }
 
-const Machine: React.FC<MachineProps> = ({ isSpinning }) => {
-  const [textures, setTextures] = useState<Texture[]>([]);
+const Machine: React.FC<MachineProps> = ({ isSpinning, images }) => {
+  const [loadedImages, setLoadedImages] = useState<any[]>([]);
 
   useEffect(() => {
     const loadTextures = async () => {
-      const assets = await Assets.load("/assets/assets.json");
-      const frames = assets.data.frames;
-      const symbols = Object.keys(frames).filter((key) =>
-        key.match(/(Bonus|Coin|High\d|Low\d|Wild)\.png/)
-      );
-      const loadedTextures = symbols.map((symbol) =>
-        Texture.from(frames[symbol].texture)
-      );
-      setTextures(loadedTextures);
+      const textureArray: any[] = [];
+      for (const image of images) {
+        const texture = await Assets.load(image);
+        textureArray.push(texture);
+      }
+      setLoadedImages(textureArray);
     };
 
     loadTextures();
-  }, []);
+  }, [images]);
 
   return (
     <Stage
       width={800}
       height={500}
       options={{ backgroundColor: 0x1099bb }}>
-      {textures.length > 0 && (
+      {loadedImages.length > 0 && (
         <>
+          {loadedImages.map((texture, index) => (
+            <AnimatedSprite
+              key={index}
+              texture={texture}
+              x={100 * index}
+              y={100}
+              isPlaying={true}
+            />
+          ))}
           <Reel
             x={75}
             y={100}
-            textures={textures}
             isSpinning={isSpinning}
+            images={loadedImages}
           />
           <Reel
             x={325}
             y={100}
-            textures={textures}
             isSpinning={isSpinning}
+            images={loadedImages}
           />
           <Reel
             x={575}
             y={100}
-            textures={textures}
             isSpinning={isSpinning}
+            images={loadedImages}
           />
         </>
       )}
